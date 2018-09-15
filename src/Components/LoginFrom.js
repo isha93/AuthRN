@@ -1,22 +1,51 @@
 import React, {Component} from 'react';
 import {Text} from 'react-native';
-import {Button, Card, CardSection, Input} from './common';
+import {Button, Card, CardSection, Input, Spinner} from './common';
 import firebase from 'firebase';
 
 export default class LoginForm extends Component{
-    state = {email : '', pass:'', error: ''};
+    state = {email : '', pass:'', error: '', loading: false};
     
     onButtonPress(){
         const {email,pass} = this.state;
 
-        this.setState({error: ''})
+        this.setState({error: '', loading: true});
+    
         firebase.auth().signInWithEmailAndPassword(email, pass)
+        .then(this.onLoginSuccess.bind(this))
         .catch(()=>{
             firebase.auth().createUserWithEmailAndPassword(email,pass)
-            .catch(()=> {
-                this.setState({error: 'Authentication Failed. '});
-            });
+            .then(this.onLoginSuccess.bind(this))
+            .catch(this.onLoginFailed.bind(this))
         });
+    }
+
+    onLoginSuccess(){
+        this.setState({
+            email: '',
+            pass: '',
+            error:'',
+            loading: false
+        })
+
+    }
+    onLoginFailed(){
+        this.setState({
+            error: 'Authentication Failed Please Try Again!',
+            loading: false
+        })
+    }
+
+
+    onButtonRender(){
+        if(this.state.loading){
+            return <Spinner size='small'/>
+        }
+        return(
+            <Button onPress={this.onButtonPress.bind(this)}>
+                Log in
+            </Button>
+        );
     }
     render(){
         return(
@@ -42,9 +71,7 @@ export default class LoginForm extends Component{
                     {this.state.error}
                 </Text>
                 <CardSection>
-                    <Button onPress={this.onButtonPress.bind(this)}>
-                        Log in
-                    </Button>
+                   {this.onButtonRender()}
                 </CardSection>
             </Card>
         );
