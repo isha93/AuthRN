@@ -1,49 +1,30 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Header} from './Components/common';
+import firebase from 'firebase';
+import LoginForm from './Components/LoginFrom'
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
 
-type Props = {};
-export default class App extends Component<Props> {
+class App extends Component{
+  componentWillMount(){
+    firebase.initializeApp({
+      apiKey: 'AIzaSyBeF3QBb0sSaf64hPVk4PjcATgKHLf--KU',
+      authDomain: 'authrn-51258.firebaseapp.com',
+      databaseURL: 'https://authrn-51258.firebaseio.com',
+      projectId: 'authrn-51258',
+      storageBucket: 'authrn-51258.appspot.com',
+      messagingSenderId: '165030088721'
+    });
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+      <View>
+        <Header judul={'Login'} />
+        <LoginForm />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+export default App;
